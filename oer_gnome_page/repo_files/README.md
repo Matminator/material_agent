@@ -15,4 +15,4 @@ Data: **CC BY-NC 4.0**, non-commercial use only, inherited from GNoME.
 
 This repository is regenerated and force-replaced on each publish, so it holds
 only the current snapshot. The code that builds it lives in
-[BattModels/material_agent](https://github.com/BattModels/material_agent/tree/oer_resume_extented_workflow).
+[Matminator/material_agent](https://github.com/Matminator/material_agent).
