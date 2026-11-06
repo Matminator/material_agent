@@ -30,7 +30,13 @@ RESUMING = "__pregel_resuming"
 @pytest.fixture(scope="module")
 def stream_agent(): 
     pytest.importorskip("gnome_dreams_oer_screening")
-    from src import planNexe2
+    # The package being importable is not enough: src.tools builds the AQ-GNoME
+    # stability cache at import, and that dataset is a separate DTU deposit that
+    # is in no repository. Skip where it is absent rather than fail.
+    try:
+        from src import planNexe2
+    except FileNotFoundError as e:
+        pytest.skip(f"needs the AQ-GNoME dataset: {e}")
     return planNexe2
 
 
