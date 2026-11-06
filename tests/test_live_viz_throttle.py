@@ -19,6 +19,21 @@ from src import var
 from src.live_visualizer import LiveVisualizer
 
 
+@pytest.fixture(autouse=True)
+def _dashboard_enabled(monkeypatch):
+    """Throttling only has observable behaviour when the dashboard writes at all.
+
+    var.LIVE_VIZ_ENABLED is False in production (switched off 2026-11-06: 324 MB
+    live_visualization.html + 163 MB live_data.js per flush, ~24 min of blocking
+    main-thread CPU each). These tests are about WHEN a write happens, not
+    whether the feature is on, so pin it on rather than inheriting whatever the
+    module-level default happens to be -- otherwise they pass or fail according
+    to a tuning knob they are not testing. The two tests that need it off set it
+    back themselves, which runs after this fixture.
+    """
+    monkeypatch.setattr(var, "LIVE_VIZ_ENABLED", True)
+
+
 @pytest.fixture
 def viz(tmp_path, monkeypatch):
     monkeypatch.setattr(var, "LIVE_VIZ_DATA_MIN_INTERVAL_S", 999)
