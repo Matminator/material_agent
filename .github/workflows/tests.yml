@@ -36,10 +36,7 @@ jobs:
           enable-cache: true
 
       - name: Install dependencies
-        run: |
-          uv sync --frozen
-          # autocat still imports pkg_resources, removed in setuptools 81
-          uv pip install "setuptools<81"
+        run: uv sync --frozen
 
       - name: Run tests
         run: |
