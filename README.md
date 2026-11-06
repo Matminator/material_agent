@@ -1,5 +1,7 @@
 # Autonomous OER catalyst screening
 
+[![Tests](https://github.com/Matminator/material_agent/actions/workflows/tests.yml/badge.svg)](https://github.com/Matminator/material_agent/actions/workflows/tests.yml)
+
 A multi-agent system that runs DFT catalyst screening unattended for months: it
 picks candidate materials, launches and supervises VASP jobs on an HPC cluster,
 reads the results, and decides what to compute next — forming and discarding its

@@ -1,0 +1,51 @@
+name: Tests
+
+# Runs the subset of the suite that needs no data outside the repo.
+#
+# Excluded, and why -- all six import src.tools or src.planNexe2 at module
+# scope, which instantiates the AQ-GNoME Data_Handler. That dataset is a
+# separate DTU deposit (doi.org/10.11583/DTU.30738716), gitignored and in no
+# repository, so CI cannot obtain it:
+#
+#   test_query_explog_tool.py      (also gated behind RUN_SLOW_TESTS)
+#   test_disposition_toolshims.py
+#   test_artifact_store.py
+#   test_legacy_channel_migration.py
+#   test_supervisor_schema.py
+#   test_resume_serialization.py
+#
+# Everything else -- the guardrails, the wait gate, the disposition logic, the
+# step ledger, the resume helpers -- runs here. 339 tests.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.11"
+          enable-cache: true
+
+      - name: Install dependencies
+        run: |
+          uv sync --frozen
+          # autocat still imports pkg_resources, removed in setuptools 81
+          uv pip install "setuptools<81"
+
+      - name: Run tests
+        run: |
+          uv run pytest tests/ -q \
+            --ignore=tests/test_query_explog_tool.py \
+            --ignore=tests/test_disposition_toolshims.py \
+            --ignore=tests/test_artifact_store.py \
+            --ignore=tests/test_legacy_channel_migration.py \
+            --ignore=tests/test_supervisor_schema.py \
+            --ignore=tests/test_resume_serialization.py
