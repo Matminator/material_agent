@@ -24,7 +24,14 @@ dependencies = [
     "networkx>=3.6.1",
 
     # HPC + plotting + misc
-    "pysqa>=0.3.5",
+    # pysqa held at 0.3.x: this is the version the live campaign submits with, and
+    # nothing above it has ever run the submission path. The tests pass on 1.1.3,
+    # but they exercise the gate logic, not QueueAdapter.submit_job -- so a green
+    # suite is not evidence that a 1.x lock could run a campaign.
+    "pysqa>=0.3.5,<0.4",
+    # autocat imports pkg_resources, which setuptools dropped in 81. A real
+    # runtime requirement of src.tools, not a CI workaround.
+    "setuptools<81",
     "matplotlib>=3.10.8",
     "seaborn>=0.13.2",
     "tqdm>=4.67.3",
